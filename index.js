@@ -6,6 +6,7 @@ const http = require('http');
 const { PORT } = require('./src/utils/env');
 
 const socketController = require('./src/socket');
+const auth = require('./src/routers/auth.routers');
 
 const app = express();
 
@@ -32,11 +33,15 @@ io.on('connection', (socket) => {
   socketController(io, socket);
 });
 
-try {
-  // app.use(user)
-} catch (error) {
-  console.log(error);
-}
+const data = () => {
+  try {
+    app.use(auth);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+data();
 
 const APP_PORT = PORT || 4007;
 
