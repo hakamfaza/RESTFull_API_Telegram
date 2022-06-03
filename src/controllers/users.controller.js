@@ -39,6 +39,17 @@ module.exports = {
     try {
       const { id } = req.APP_DATA.tokenDecoded;
 
+      const user = await usersModels.getDetailUser(id);
+
+      if (!user.rowCount) {
+        failed(res, {
+          code: 400,
+          payload: 'User not found!',
+          message: 'Update user failed!',
+        });
+        return;
+      }
+
       const data = {
         id,
         ...req.body,
@@ -112,6 +123,41 @@ module.exports = {
         code: 200,
         payload: response,
         message: 'Update photo success!',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal server errror!',
+      });
+    }
+  },
+  deleteUsers: async (req, res) => {
+    try {
+      const { id } = req.APP_DATA.tokenDecoded;
+      const user = await usersModels.getDetailUser(id);
+
+      if (!user.rowCount) {
+        failed(res, {
+          code: 400,
+          payload: 'User not found!',
+          message: 'Delete user failed!',
+        });
+        return;
+      }
+
+      if (user.rowCount) {
+        if (user.rows[0].photo) {
+          deleteFile(`public/${user.rows[0].photo}`);
+        }
+      }
+
+      const response = await usersModels.deleteUser(id);
+
+      success(res, {
+        code: 200,
+        payload: response,
+        message: 'Success delete photo!',
       });
     } catch (error) {
       failed(res, {
