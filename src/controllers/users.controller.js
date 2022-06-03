@@ -1,5 +1,6 @@
 const usersModels = require('../models/users.models');
 const { success, failed } = require('../utils/response');
+const deleteFile = require('../utils/deleteFile');
 
 module.exports = {
   getUsers: async (req, res) => {
@@ -36,7 +37,7 @@ module.exports = {
   },
   updateUsers: async (req, res) => {
     try {
-      const id = '0c6026e3-3a12-4ba6-8246-d98af5c50126';
+      const { id } = req.APP_DATA.tokenDecoded;
 
       const data = {
         id,
@@ -56,6 +57,61 @@ module.exports = {
         code: 400,
         payload: 'You don\'t have access to update this users!',
         message: 'Update users failed!',
+      });
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        payload: error.message,
+        message: 'Internal server errror!',
+      });
+    }
+  },
+  updatePhoto: async (req, res) => {
+    try {
+      const { id } = req.APP_DATA.tokenDecoded;
+
+      const user = await usersModels.getDetailUser(id);
+      if (!user.rowCount) {
+        if (req.file) {
+          deleteFile(req.file.path);
+        }
+        failed(res, {
+          code: 400,
+          payload: 'User not found!',
+          message: 'Update photo failed!',
+        });
+        return;
+      }
+
+      if (req.file) {
+        if (user.rows[0].photo) {
+          deleteFile(`public/${user.rows[0].photo}`);
+        }
+      }
+
+      const data = {
+        id,
+        photo: req.file.filename,
+      };
+
+      const response = await usersModels.updatePhoto(data);
+      if (!response.rowCount) {
+        if (req.file) {
+          deleteFile(req.file.path);
+        }
+
+        failed(res, {
+          code: 400,
+          payload: 'You don\'t update this photo!',
+          message: 'Update photo failed!',
+        });
+        return;
+      }
+
+      success(res, {
+        code: 200,
+        payload: response,
+        message: 'Update photo success!',
       });
     } catch (error) {
       failed(res, {

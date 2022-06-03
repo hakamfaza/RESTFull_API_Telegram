@@ -28,4 +28,13 @@ module.exports = {
       resolve(result);
     });
   }),
+  updatePhoto: (data) => new Promise((resolve, reject) => {
+    const { id, photo } = data;
+    db.query('UPDATE users SET photo=$1 WHERE id=$2', [photo, id], (err, result) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(result);
+    });
+  }),
 };
