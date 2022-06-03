@@ -7,6 +7,7 @@ const { PORT } = require('./src/utils/env');
 
 const socketController = require('./src/socket');
 const auth = require('./src/routers/auth.routers');
+const users = require('./src/routers/users.routers');
 
 const app = express();
 
@@ -36,6 +37,7 @@ io.on('connection', (socket) => {
 const data = () => {
   try {
     app.use(auth);
+    app.use(users);
   } catch (error) {
     console.log(error);
   }
