@@ -14,4 +14,12 @@ module.exports = {
       resolve(result);
     });
   }),
+  list: (sender, receiver) => new Promise((resolve, reject) => {
+    db.query('SELECT chats.id, chats.message, userSender.fullname AS sender, userReceiver.fullname AS receiver FROM chats LEFT JOIN users AS userSender ON chats.sender=userSender.id LEFT JOIN users AS userReceiver ON chats.receiver=userReceiver.id WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)', [sender, receiver], (err, result) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(result);
+    });
+  }),
 };

@@ -1,3 +1,5 @@
+const { store, list } = require('../models/chats.models');
+
 module.exports = (io, socket) => {
   socket.on('ping', (data) => {
     socket.emit('ping-response', data);
@@ -10,6 +12,15 @@ module.exports = (io, socket) => {
     socket.join(id);
   });
   socket.on('send-message', (data) => {
-    // io.emit('send-message-response', message);
+    store(data).then(async () => {
+      const listChats = await list(data.sender, data.receiver);
+      io.to(data.receiver).emit('sende-message-response', listChats.rows);
+    }).catch((err) => {
+      console.log(err);
+    });
+  });
+  socket.on('chat-history', async (data) => {
+    const listChats = await list(data.sender, data.receiver);
+    io.to(data.sender).emit('send-message-response', listChats);
   });
 };
