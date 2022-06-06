@@ -10,6 +10,7 @@ const { PORT } = require('./src/utils/env');
 const socketController = require('./src/socket');
 const auth = require('./src/routers/auth.routers');
 const users = require('./src/routers/users.routers');
+const chats = require('./src/routers/chats.routers');
 
 const app = express();
 
@@ -48,6 +49,7 @@ const data = () => {
   try {
     app.use(auth);
     app.use(users);
+    app.use(chats);
   } catch (error) {
     console.log(error);
   }

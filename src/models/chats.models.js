@@ -22,4 +22,12 @@ module.exports = {
       resolve(result);
     });
   }),
+  deleteMessage: (id) => new Promise((resolve, reject) => {
+    db.query('DELETE FROM chats WHERE id=$1', [id], (err, result) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(result);
+    });
+  }),
 };
