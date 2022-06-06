@@ -7,7 +7,7 @@ module.exports = {
     const {
       sender, receiver, message, chatType, isRead, date,
     } = data;
-    db.query('INSERT INTO chats (id, sender, receiver, message, chat_type, isRead, date) VALUES ($1, $2, $3, $3, $4, $5, $6, $7)', [id, sender, receiver, message, chatType, isRead, date], (err, result) => {
+    db.query('INSERT INTO chats (id, sender, receiver, message, chat_type, date, is_read) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id, sender, receiver, message, chatType, date, isRead], (err, result) => {
       if (err) {
         reject(err);
       }
@@ -15,7 +15,7 @@ module.exports = {
     });
   }),
   list: (sender, receiver) => new Promise((resolve, reject) => {
-    db.query('SELECT chats.id, chats.message, userSender.fullname AS sender, userReceiver.fullname AS receiver FROM chats LEFT JOIN users AS userSender ON chats.sender=userSender.id LEFT JOIN users AS userReceiver ON chats.receiver=userReceiver.id WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)', [sender, receiver], (err, result) => {
+    db.query(`SELECT chats.id, chats.message, userSender.id AS sender_id, userSender.photo AS sender_photo, userReceiver.photo AS receiver_photo, userReceiver.id AS receiver_id, userSender.username AS sender, userReceiver.username AS receiver FROM chats LEFT JOIN users AS userSender ON chats.sender=userSender.id LEFT JOIN users AS userReceiver ON chats.receiver=userReceiver.id WHERE (sender='${sender}' AND receiver='${receiver}') OR (sender='${receiver}' AND receiver='${sender}')`, (err, result) => {
       if (err) {
         reject(err);
       }

@@ -1,8 +1,8 @@
 const db = require('../config/db');
 
 module.exports = {
-  getUser: () => new Promise((resolve, reject) => {
-    db.query('SELECT * FROM users', (err, result) => {
+  getUser: (getSearch) => new Promise((resolve, reject) => {
+    db.query(`SELECT * FROM users WHERE username ILIKE '%${getSearch}%'`, (err, result) => {
       if (err) {
         reject(err);
       }
@@ -19,9 +19,9 @@ module.exports = {
   }),
   updateUsers: (data) => new Promise((resolve, reject) => {
     const {
-      email, username, phone, bio, id,
+      email, username, phone, bio, id, shortName,
     } = data;
-    db.query('UPDATE users SET email=$1, username=$2, phone=$3, bio=$4 WHERE id=$5', [email, username, phone, bio, id], (err, result) => {
+    db.query('UPDATE users SET email=$1, username=$2, phone=$3, bio=$4, short_name=$5 WHERE id=$6', [email, username, phone, bio, shortName, id], (err, result) => {
       if (err) {
         reject(err);
       }

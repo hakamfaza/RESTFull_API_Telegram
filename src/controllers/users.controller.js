@@ -4,8 +4,10 @@ const deleteFile = require('../utils/deleteFile');
 
 module.exports = {
   getUsers: async (req, res) => {
+    const { search } = req.query;
+    const getValueSearch = search || '';
     try {
-      const users = await usersModels.getUser();
+      const users = await usersModels.getUser(getValueSearch);
       success(res, {
         code: 200,
         payload: users.rows,

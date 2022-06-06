@@ -7,20 +7,20 @@ module.exports = (io, socket) => {
   socket.on('join-room', (data) => {
     // Receiver
     const {
-      id, email, password, usernmae,
+      id, email, password, username,
     } = data;
     socket.join(id);
   });
   socket.on('send-message', (data) => {
     store(data).then(async () => {
       const listChats = await list(data.sender, data.receiver);
-      io.to(data.receiver).emit('sende-message-response', listChats.rows);
+      io.to(data.receiver).emit('send-message-response', listChats.rows);
     }).catch((err) => {
       console.log(err);
     });
   });
   socket.on('chat-history', async (data) => {
     const listChats = await list(data.sender, data.receiver);
-    io.to(data.sender).emit('send-message-response', listChats);
+    io.to(data.sender).emit('send-message-response', listChats.rows);
   });
 };
