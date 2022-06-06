@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const cors = require('cors');
+const xss = require('xss-clean');
 const socketio = require('socket.io');
 const http = require('http');
 const { PORT } = require('./src/utils/env');
@@ -11,8 +13,16 @@ const users = require('./src/routers/users.routers');
 
 const app = express();
 
-app.use(cors());
 app.use(bodyParser.json());
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: false,
+  }),
+);
+app.use(xss());
+app.use(cors());
+app.use(express.static('public'));
 
 app.get('/ping', (req, res) => {
   res.json({
