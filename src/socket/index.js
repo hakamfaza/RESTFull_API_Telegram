@@ -5,7 +5,7 @@ module.exports = (io, socket) => {
     socket.emit('ping-response', data);
   });
   socket.on('join-room', (data) => {
-    // Receiver
+    // My Room
     const {
       id, email, password, username,
     } = data;
@@ -13,6 +13,7 @@ module.exports = (io, socket) => {
   });
   socket.on('send-message', (data) => {
     store(data).then(async () => {
+      // send message
       const listChats = await list(data.sender, data.receiver);
       io.to(data.receiver).emit('send-message-response', listChats.rows);
     }).catch((err) => {
