@@ -1,4 +1,4 @@
-const { store, list } = require('../models/chats.models');
+const { store, list, deleteMessage } = require('../models/chats.models');
 
 module.exports = (io, socket) => {
   socket.on('ping', (data) => {
@@ -24,4 +24,10 @@ module.exports = (io, socket) => {
     const listChats = await list(data.sender, data.receiver);
     io.to(data.sender).emit('send-message-response', listChats.rows);
   });
+  socket.on('delete-message', async (data) => {
+    const {id, receiver, sender} = data
+    deleteMessage(id)
+      const res = await list(sender, receiver)
+      io.to(sender).emit('send-message-response',res.rows)
+  })
 };
