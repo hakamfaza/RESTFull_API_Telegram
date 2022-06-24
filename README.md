@@ -83,11 +83,14 @@ JWT_EXPIRED = [JWT_EXPIRED]
 
 
 
-##### Link Front End
-* https:https://github.com/hakamfaza/Front-End-TelegramApp
-* https:https://telegram-app-lime.vercel.app/
+## Front End
+Repository: https://github.com/hakamfaza/Front-End-TelegramApp
+
+## [License](https://github.com/hakamfaza/RESTFull_API_Telegram/blob/master/LICENSE)
+
+MIT © [Hakam Faza ](https://github.com/hakamfaza)
 
 ## Authors
 
-- [@hakamfaza](https://github.com/hakamfaza)
+[@hakamfaza](https://github.com/hakamfaza)
 
